@@ -1,8 +1,8 @@
-CLASS zcl_html_popup DEFINITION.
+CLASS zcl_html_popup DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC.
-  
+
   PUBLIC SECTION.
 
     TYPES callout_type TYPE c LENGTH 1.
@@ -85,13 +85,7 @@ CLASS zcl_html_popup DEFINITION.
 ENDCLASS.
 
 
-CLASS zcl_html_popup IMPLEMENTATION.
-
-  METHOD clear_content.
-
-    CLEAR popup_content.
-
-  ENDMETHOD.
+CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   METHOD append_button.
 
@@ -122,34 +116,6 @@ CLASS zcl_html_popup IMPLEMENTATION.
            size   BETWEEN 1 AND 6.
 
     popup_content &&= |<h{ size }>{ header }</h{ size }>|.
-
-  ENDMETHOD.
-
-  METHOD append_ordered_list.
-
-    CHECK items IS NOT INITIAL.
-
-    popup_content &&= |<ol>|.
-
-    LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
-      popup_content &&= |<li>{ <item> }</li>|.
-    ENDLOOP.
-
-    popup_content &&= |</ol>|.
-
-  ENDMETHOD.
-
-  METHOD append_unordered_list.
-
-    CHECK items IS NOT INITIAL.
-
-    popup_content &&= |<ul>|.
-
-    LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
-      popup_content &&= |<li>{ <item> }</li>|.
-    ENDLOOP.
-
-    popup_content &&= |</ul>|.
 
   ENDMETHOD.
 
@@ -195,12 +161,6 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD append_paragraph.
-
-    popup_content &&= |<p>{ paragraph }</p>|.
-
-  ENDMETHOD.
-
   METHOD append_monospaced_text_block.
     "append_preformatted_text.
 
@@ -223,6 +183,40 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD append_ordered_list.
+
+    CHECK items IS NOT INITIAL.
+
+    popup_content &&= |<ol>|.
+
+    LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
+      popup_content &&= |<li>{ <item> }</li>|.
+    ENDLOOP.
+
+    popup_content &&= |</ol>|.
+
+  ENDMETHOD.
+
+  METHOD append_paragraph.
+
+    popup_content &&= |<p>{ paragraph }</p>|.
+
+  ENDMETHOD.
+
+  METHOD append_unordered_list.
+
+    CHECK items IS NOT INITIAL.
+
+    popup_content &&= |<ul>|.
+
+    LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
+      popup_content &&= |<li>{ <item> }</li>|.
+    ENDLOOP.
+
+    popup_content &&= |</ul>|.
+
+  ENDMETHOD.
+
   METHOD begin_callout.
 
     DATA(callout_type) = SWITCH string( type WHEN callout_types-note     THEN 'note'
@@ -231,7 +225,7 @@ CLASS zcl_html_popup IMPLEMENTATION.
                                              WHEN callout_types-warning  THEN 'warning'
                                              WHEN callout_types-error    THEN 'error'
                                              WHEN callout_types-critical THEN 'critical'
-                                             ELSE                             'none' ).
+                                             ELSE 'none' ).
 
     popup_content &&= |<div class="callout { callout_type }">|.
     popup_content &&= |<div class="callout-icon"></div><div>|.
@@ -239,6 +233,12 @@ CLASS zcl_html_popup IMPLEMENTATION.
     IF title IS NOT INITIAL.
       popup_content &&= |<strong>{ title }:</strong>|.
     ENDIF.
+
+  ENDMETHOD.
+
+  METHOD clear_content.
+
+    CLEAR popup_content.
 
   ENDMETHOD.
 
@@ -280,6 +280,33 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `  background-color: #fafafa;`
       `}`
       `/* --------------------------------- */`
+      `/* header                            */`
+      `/* --------------------------------- */`
+      `h1 {`
+      `  font-size: 20px;`
+      `  margin: 10px 0px 10px 0px;`
+      `}`
+      `h2 {`
+      `  font-size: 18px;`
+      `  margin: 10px 0px 10px 0px;`
+      `}`
+      `h3 {`
+      `  font-size: 16px;`
+      `  margin: 10px 0px 10px 0px;`
+      `}`
+      `h4 {`
+      `  font-size: 15px;`
+      `  margin: 10px 0px 10px 0px;`
+      `}`
+      `h5 {`
+      `  font-size: 14px;`
+      `  margin: 10px 0px 10px 0px;`
+      `}`
+      `h6 {`
+      `  font-size: 13px;`
+      `  margin: 10px 0px 10px 0px;`
+      `}`
+      `/* --------------------------------- */`
       `/* pre                               */`
       `/* --------------------------------- */`
       `pre {`
@@ -290,6 +317,19 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `  border: 1px solid #ccc;`
       `  background-color: #f9f9f9;`
       `}`
+      `/* --------------------------------- */`
+      `/* list                              */`
+      `/* --------------------------------- */`
+      `ul.circle {list-style-type: circle;}`
+      `ul.disc {list-style-type: disc;}`
+      `ul.square {list-style-type: square;}`
+      `ol.decimal {list-style-type: decimal;}`
+      `ol.decimal-leading-zero {list-style-type: decimal-leading-zero;}`
+      `ol.lower-alpha {list-style-type: lower-alpha;}`
+      `ol.lower-roman {list-style-type: lower-roman;}`
+      `ol.upper-alpha {list-style-type: upper-alpha;}`
+      `ol.upper-roman {list-style-type: upper-roman;}`
+      ``
       `/* --------------------------------- */`
       `/* table                             */`
       `/* --------------------------------- */`
@@ -328,36 +368,6 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.15);`
       `  margin: auto;`
       `}`
-      `.popup h1 {`
-      `  font-size: 20px;`
-      `  margin: 10px 0px 10px 0px;`
-      `}`
-      `.popup h2 {`
-      `  font-size: 18px;`
-      `  margin: 10px 0px 10px 0px;`
-      `}`
-      `.popup h3 {`
-      `  font-size: 16px;`
-      `  margin: 10px 0px 10px 0px;`
-      `}`
-      `.popup h4 {`
-      `  font-size: 15px;`
-      `  margin: 10px 0px 10px 0px;`
-      `}`
-      `.popup h5 {`
-      `  font-size: 14px;`
-      `  margin: 10px 0px 10px 0px;`
-      `}`
-      `.popup h6 {`
-      `  font-size: 13px;`
-      `  margin: 10px 0px 10px 0px;`
-      `}`
-      "`.popup ol {`
-      "`}`
-      "`.popup ul {`
-      "`}`
-      "`.popup li {`
-      "`}`
       `/* --------------------------------- */`
       `/* callouts                          */`
       `/* --------------------------------- */`
