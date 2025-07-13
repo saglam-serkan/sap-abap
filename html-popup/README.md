@@ -51,3 +51,7 @@ html_popup->append_paragraph(
 html_popup->display(
     title = 'Title'
   ).
+```
+
+## Examples
+[See other examples](examples/)
