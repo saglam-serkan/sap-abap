@@ -21,15 +21,15 @@ This class can be used to show messages, short help (for example, F4 help on sel
 | Method                         | Description                                    | Relevant HTML Element | Notes                                          |
 |:-------------------------------|:-----------------------------------------------|:----------------------|:-----------------------------------------------|
 | `clear_content`                | Clears previously added elements               |                       | Call this method before displaying a new popup |
-| `append_button`                | Appends a clickable button                     | `<input>`             ||
 | `append_header`                | Appends a header                               | `<h1>` to `<h6>`      ||
 | `append_paragraph`             | Appends a paragraph                            | `<p>`                 ||
 | `append_ordered_list`          | Appends a ordered list                         | `<ol>`                ||
 | `append_unordered_list`        | Appends a unordered list                       | `<ul>`                ||
 | `append_markdown_table`        | Appends a markdown formatted table             | `<table>`             ||
 | `append_monospaced_text_block` | Appends a block of monospaced (code-like) text | `<pre>`               ||
-| `append_callout_paragraph`     | Appends a paragraph in a callout box           | `<div>` (styled)      ||
-| `begin_callout`                | Starts a callout section                       | `<div>` (styled)      | Other methods add content inside; remember to call `end_callout` |
+| `append_button`                | Appends a clickable button                     | `<input>`             ||
+| `append_callout_paragraph`     | Appends a paragraph in a callout box           | `<div>`               ||
+| `begin_callout`                | Starts a callout section                       | `<div>`               | Other methods add content inside; remember to call `end_callout` |
 | `end_callout`                  | Ends a callout section                         |                       | Closes the `<div>`; must be called after `begin_callout` |
 | `display`                      | Renders and shows the content as a popup       |                       ||
 | `on_button_click`              | Handles button click events                    |                       | /!\ Not yet finished |
