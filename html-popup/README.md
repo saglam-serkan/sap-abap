@@ -3,7 +3,7 @@
 `ZCL_HTML_POPUP` is an ABAP helper class that simplifies the creation and display of HTML popup windows in SAP GUI.
 It supports headers, paragraphs, lists, buttons with parameters, callouts (such as warnings or info), tables, and monospaced text blocks. 
 
-This class can be used to show messages, short help (for example, F4 help on selection screen elements), documentation (as a replacement for the standard popup when F1 is clicked), or rich content in a clear and user-friendly format within the SAP GUI.
+This class can be used to show messages, contextual help (such as F1 help on selection screen elements), or rich content in a clear and user-friendly format within the SAP GUI.
 
 ## Features
 
