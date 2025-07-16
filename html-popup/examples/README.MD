@@ -27,27 +27,10 @@
 ![Header and Paragraph](../images/table.png)
 
 <table id="verticalalign">
-    <caption>vertical-align</caption>
-    <thead>
-        <tr>
-            <th></th>
-            <th>top</th>
-            <th>middle</th>
-            <th>bottom</th>
-            <th>top-right</th>
-            <th>middle-right</th>
-            <th>bottom-right</th>
-        </tr>
-    </thead>
+    <thead><tr><th>Example</th><th>Output</th></tr></thead>
     <tbody>
         <tr>
-            <td align="left">te<br>st</td>
-            <td align="left" valign="top">x</td>
-            <td align="left" valign="middle">x</td>
-            <td align="left" valign="bottom">x</td>
-            <td align="right" valign="top">x</td>
-            <td align="right" valign="middle">x</td>
-            <td align="right" valign="bottom">x</td>
+            <td align="left" valign="top">Button</td><td align="left" valign="top">![Button](../images/button.png)</td>
         </tr>
     </tbody>
 </table>
