@@ -2,9 +2,9 @@
 
 ###### Disclaimer[^1]
 
-| Name                                  | Description                                    | 
-|:--------------------------------------|:-----------------------------------------------|
-| <nobr>[HTML Popup](html-popup)</nobr> | `ZCL_HTML_POPUP` is a helper class that simplifies the creation and display of HTML popup windows in SAP GUI. |
+| Name                     | Description                                    | 
+|:-------------------------|:-----------------------------------------------|
+| [HTML Popup](html-popup) | `ZCL_HTML_POPUP` is a helper class that simplifies the creation and display of HTML popup windows in SAP GUI. |
 
 [^1]: Disclaimer: This repository contains ABAP code samples for educational and informational purposes.
 All content is published under the [MIT License](LICENSE) and is provided "as is", without warranty of any kind.
