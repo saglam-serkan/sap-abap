@@ -1,6 +1,4 @@
-
-
-Button
+## Button
 
 ![Button](../images/button.png)
 
