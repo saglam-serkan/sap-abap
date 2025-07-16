@@ -10,11 +10,10 @@ This class can be used to show messages, contextual help (such as F1 help on sel
 - Headers
 - Paragraphs
 - Ordered and unordered lists
-- Markdown-like tables
-- Preformatted (monospaced) text blocks
+- Tables
+- Monospaced text blocks
 - Callout sections (info, warning, success, error, etc.)
 - Progress bar
-- Buttons with actions and parameter passing
 
 ## Methods Overview
 
