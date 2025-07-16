@@ -6,19 +6,9 @@ CLASS zcl_html_popup DEFINITION
   PUBLIC SECTION.
     CLASS cl_abap_browser DEFINITION LOAD .
 
-    TYPES:
-      callout_type   TYPE string,
-      list_type      TYPE string,
-      progress_color TYPE string.
-
-    TYPES:
-      BEGIN OF param_value,
-        param TYPE string,
-        value TYPE string,
-      END OF param_value .
-
-    TYPES:
-      param_value_tab TYPE TABLE OF param_value WITH EMPTY KEY .
+    TYPES callout_type TYPE string .
+    TYPES list_type TYPE string .
+    TYPES progress_color TYPE string .
 
     CONSTANTS:
       BEGIN OF callout_types,
@@ -54,82 +44,100 @@ CLASS zcl_html_popup DEFINITION
         green  TYPE string VALUE 'green',
         orange TYPE string VALUE 'orange',
       END OF progress_colors .
-      
+
     METHODS clear_content .
-      
+    
     METHODS append_header
       IMPORTING
         !header TYPE string
         !size   TYPE numc1 DEFAULT 1 .
-      
+    
     METHODS append_paragraph
       IMPORTING
         !paragraph TYPE string OPTIONAL .
-      
+    
     METHODS append_ordered_list
       IMPORTING
         !type  TYPE zcl_html_popup=>list_type DEFAULT zcl_html_popup=>ol_types-decimal
         !items TYPE string_table .
-      
+    
     METHODS append_unordered_list
       IMPORTING
         !type  TYPE zcl_html_popup=>list_type DEFAULT zcl_html_popup=>ul_types-disc
         !items TYPE string_table .
-      
+    
     METHODS append_markdown_table
       IMPORTING
         !caption TYPE string OPTIONAL
         !headers TYPE string_table OPTIONAL
         !rows    TYPE string_table OPTIONAL .
-      
-    METHODS append_monospaced_text_block
+    
+    METHODS append_table_from_string_tab
+      IMPORTING
+        !caption   TYPE string OPTIONAL
+        !header    TYPE string OPTIONAL
+        !rows      TYPE string_table OPTIONAL
+        !delimiter TYPE char1 .
+    
+    METHODS append_monospaced_block
       IMPORTING
         !caption TYPE string OPTIONAL
         !rows    TYPE string_table .
-      
+    
     METHODS append_progress_bar
       IMPORTING
         !value     TYPE i
         !max_value TYPE i
-        !color     TYPE zcl_html_popup=>progress_color DEFAULT zcl_html_popup=>progress_colors-green.
-      
+        !color     TYPE zcl_html_popup=>progress_color DEFAULT zcl_html_popup=>progress_colors-green .
+    
     METHODS append_button
       IMPORTING
         !label  TYPE string
         !action TYPE string
-        !params TYPE param_value_tab .
-      
+        !params TYPE tihttpnvp .
+    
+    METHODS append_element
+      IMPORTING
+        !element TYPE string .
+    
     METHODS append_callout_paragraph
       IMPORTING
         !type      TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
         !title     TYPE string OPTIONAL
         !paragraph TYPE string .
-      
+    
     METHODS begin_callout
       IMPORTING
         !type  TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
         !title TYPE string OPTIONAL .
-      
+    
     METHODS end_callout .
-      
+    
     METHODS display
       IMPORTING
         !title TYPE cl_abap_browser=>title OPTIONAL
         !size  TYPE string DEFAULT cl_abap_browser=>medium .
-      
+    
   PROTECTED SECTION.
 
   PRIVATE SECTION.
 
     DATA popup_content TYPE string .
 
-    METHODS get_style
-      RETURNING VALUE(style) TYPE string.
-
-    METHODS on_button_click FOR EVENT sapevent OF cl_abap_browser
-      IMPORTING action
-                query_table.
-
+    METHODS append_content
+      IMPORTING
+        !content TYPE string .
+    
+    METHODS get_css_style
+      RETURNING
+        VALUE(style) TYPE string .
+    
+    METHODS on_button_click
+        FOR EVENT sapevent OF cl_abap_browser
+      IMPORTING
+        !action
+        !query_table .
+    
 ENDCLASS.
 
 
@@ -139,14 +147,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
   METHOD append_button.
 
-    DATA query_string TYPE string.
-
-    LOOP AT params ASSIGNING FIELD-SYMBOL(<params>).
-      query_string = |{ query_string }{ <params>-param }={ <params>-value }&|.
-    ENDLOOP.
-
-    popup_content &&=: |<form method=post action=SAPEVENT:{ action }?{ query_string }>|,
-                       |<input type=submit class="button" value="{ label }"></form>|.
+    append_content(:
+      |<form method=post action=SAPEVENT:{ action }?{ cl_http_utility=>if_http_utility~fields_to_string( params ) }>| ),
+      |<input type=submit class="button" value="{ label }"></form>| ).
 
   ENDMETHOD.
 
@@ -162,12 +165,26 @@ CLASS zcl_html_popup IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD append_content.
+
+    popup_content = popup_content && content.
+
+  ENDMETHOD.
+
+
+  METHOD append_element.
+
+    append_content( element ).
+
+  ENDMETHOD.
+
+
   METHOD append_header.
 
     CHECK: header IS NOT INITIAL,
            size   BETWEEN 1 AND 6.
 
-    popup_content &&= |<h{ size }>{ header }</h{ size }>|.
+    append_content( |<h{ size }>{ header }</h{ size }>| ).
 
   ENDMETHOD.
 
@@ -183,57 +200,58 @@ CLASS zcl_html_popup IMPLEMENTATION.
           cell   TYPE string,
           cells  TYPE string_table.
 
-    popup_content &&= |<table>|.
+    append_content( |<table>| ).
 
     IF caption IS NOT INITIAL.
-      popup_content &&= |<caption>{ caption }</caption>|.
+      append_content( |<caption>{ caption }</caption>| ).
     ENDIF.
 
     IF headers IS NOT INITIAL.
-      popup_content &&= |<thead><tr>|.
+      append_content( |<thead><tr>| ).
       LOOP AT headers INTO header.
-        popup_content &&= |<th>{ header }</th>|.
+        append_content( |<th>{ header }</th>| ).
       ENDLOOP.
-      popup_content &&= |</tr></thead>|.
+      append_content( |</tr></thead>| ).
     ENDIF.
 
     IF rows IS NOT INITIAL.
-      popup_content &&= |<tbody>|.
+      append_content( |<tbody>| ).
       LOOP AT rows INTO row.
-        popup_content &&= |<tr>|.
+        append_content( |<tr>| ).
         SPLIT row AT '|' INTO TABLE cells.
         LOOP AT cells INTO cell.
-          popup_content &&= |<td>{ cell }</td>|.
+          append_content( |<td>{ cell }</td>| ).
         ENDLOOP.
-        popup_content &&= |</tr>|.
+        append_content( |</tr>| ).
       ENDLOOP.
-      popup_content &&= |</tbody>|.
+      append_content( |</tbody>| ).
     ENDIF.
 
-    popup_content &&= |</table>|.
+    append_content( |</table>| ).
 
   ENDMETHOD.
 
 
-  METHOD append_monospaced_text_block.
-    "preformatted text
+  METHOD append_monospaced_block.
+
+    "Appends a block of text in monospaced font, preserving whitespace formatting.
 
     CHECK rows IS NOT INITIAL.
 
     DATA row TYPE string.
 
     IF caption IS NOT INITIAL.
-      popup_content &&= |<strong>{ caption }</strong>|.
+      append_content( |<strong>{ caption }</strong>| ).
     ENDIF.
 
-    popup_content &&= |<pre>|.
+    append_content( |<pre>| ).
 
     LOOP AT rows INTO row.
       REPLACE ALL OCCURRENCES OF ` ` IN row WITH `&nbsp;`.
-      popup_content &&= |{ row }<br>|.
+      append_content( |{ row }<br>| ).
     ENDLOOP.
 
-    popup_content &&= |</pre>|.
+    append_content( |</pre>| ).
 
   ENDMETHOD.
 
@@ -242,20 +260,20 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
     CHECK items IS NOT INITIAL.
 
-    popup_content &&= |<ol class="{ type }">|.
+    append_content( |<ol class="{ type }">| ).
 
     LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
-      popup_content &&= |<li>{ <item> }</li>|.
+      append_content( |<li>{ <item> }</li>| ).
     ENDLOOP.
 
-    popup_content &&= |</ol>|.
+    append_content( |</ol>| ).
 
   ENDMETHOD.
 
 
   METHOD append_paragraph.
 
-    popup_content &&= |<p>{ paragraph }</p>|.
+    append_content( |<p>{ paragraph }</p>| ).
 
   ENDMETHOD.
 
@@ -265,7 +283,55 @@ CLASS zcl_html_popup IMPLEMENTATION.
     CHECK: value    >= 0,
            max_value > 0.
 
-    popup_content &&= |<progress value="{ value }" max="{ max_value }" class="{ color }"></progress><br>|.
+    append_content( |<progress value="{ value }" max="{ max_value }" class="{ color }"></progress><br>| ).
+
+  ENDMETHOD.
+
+
+  METHOD append_table_from_string_tab.
+
+    CHECK delimiter IS NOT INITIAL.
+
+    IF header IS INITIAL AND rows IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    DATA: headers TYPE string_table,
+          row     TYPE string,
+          cell    TYPE string,
+          cells   TYPE string_table.
+
+    append_content( |<table>| ).
+
+    IF caption IS NOT INITIAL.
+      append_content( |<caption>{ caption }</caption>| ).
+    ENDIF.
+
+    IF header IS NOT INITIAL.
+      SPLIT header AT delimiter INTO TABLE headers.
+      IF headers IS NOT INITIAL.
+        append_content( |<thead><tr>| ).
+        LOOP AT headers ASSIGNING FIELD-SYMBOL(<header>).
+          append_content( |<th>{ <header> }</th>| ).
+        ENDLOOP.
+        append_content( |</tr></thead>| ).
+      ENDIF.
+    ENDIF.
+
+    IF rows IS NOT INITIAL.
+      append_content( |<tbody>| ).
+      LOOP AT rows INTO row.
+        append_content( |<tr>| ).
+        SPLIT row AT delimiter INTO TABLE cells.
+        LOOP AT cells INTO cell.
+          append_content( |<td>{ cell }</td>| ).
+        ENDLOOP.
+        append_content( |</tr>| ).
+      ENDLOOP.
+      append_content( |</tbody>| ).
+    ENDIF.
+
+    append_content( |</table>| ).
 
   ENDMETHOD.
 
@@ -274,24 +340,24 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
     CHECK items IS NOT INITIAL.
 
-    popup_content &&= |<ul class="{ type }">|.
+    append_content( |<ul class="{ type }">| ).
 
     LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
-      popup_content &&= |<li>{ <item> }</li>|.
+      append_content( |<li>{ <item> }</li>| ).
     ENDLOOP.
 
-    popup_content &&= |</ul>|.
+    append_content( |</ul>| ).
 
   ENDMETHOD.
 
 
   METHOD begin_callout.
 
-    popup_content &&= |<div class="callout { type }">|.
-    popup_content &&= |<div class="callout-icon"></div><div>|.
+    append_content( |<div class="callout { type }">| ).
+    append_content( |<div class="callout-icon"></div><div>| ).
 
     IF title IS NOT INITIAL.
-      popup_content &&= |<strong>{ title }:</strong>|.
+      append_content( |<strong>{ title }:</strong>| ).
     ENDIF.
 
   ENDMETHOD.
@@ -315,7 +381,7 @@ CLASS zcl_html_popup IMPLEMENTATION.
                  && |<html lang="en">|
                  && |  <head>|
                  && |    <meta charset="UTF-8" />|
-                 && |    <style>{ get_style( ) }</style>|
+                 && |    <style>{ get_css_style( ) }</style>|
                  && |  </head>|
                  && |  <body>|
                  && |    <div class="popup">{ popup_content }</div>|
@@ -327,12 +393,12 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
   METHOD end_callout.
 
-    popup_content &&= |</div></div>|.
+    append_content( |</div></div>| ).
 
   ENDMETHOD.
 
 
-  METHOD get_style.
+  METHOD get_css_style.
 
     CONCATENATE
       `/* ------------------------------------------------------------------ */`
@@ -462,25 +528,25 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `/* ------------------------------------------------------------------ */`
       `/* unfilled part */`
       `progress {`
-      `    background: #e0e0e0; /* Gray 300 */`
-      `    height: 10px;`
-      `    border-radius: 10px;`
+      `  background: #e0e0e0; /* Gray 300 */`
+      `  height: 10px;`
+      `  border-radius: 10px;`
       `}`
       `/* unfilled part (Chrome/Safari) */`
       `progress::-webkit-progress-bar {`
-      `    background: #e0e0e0; /* Gray 300 */`
-      `    height: 10px;`
-      `    border-radius: 10px;`
+      `  background: #e0e0e0; /* Gray 300 */`
+      `  height: 10px;`
+      `  border-radius: 10px;`
       `}`
       `/* filled part (Chrome/Safari) */`
       `progress::-webkit-progress-value {`
-      `    background: currentColor;`
-      `    border-radius: 10px;`
+      `  background: currentColor;`
+      `  border-radius: 10px;`
       `}`
       `/* filled part (Firefox) */`
       `progress::-moz-progress-bar {`
-      `    background: currentColor`
-      `    border-radius: 10px;`
+      `  background: currentColor`
+      `  border-radius: 10px;`
       `}`
       `/* filled part */`
       `progress.red { color: #f44336; } /* Red 500 */`
@@ -498,6 +564,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
     cl_demo_output=>write( query_table ).
     cl_demo_output=>display( ).
 
+    "cl_http_utility=>if_http_utility~fields_to_string(
+    "cl_http_utility=>if_http_utility~string_to_fields(
+
   ENDMETHOD.
-  
+
 ENDCLASS.
