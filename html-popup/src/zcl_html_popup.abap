@@ -7,102 +7,116 @@ CLASS zcl_html_popup DEFINITION
     CLASS cl_abap_browser DEFINITION LOAD .
 
     TYPES:
-      callout_type TYPE c LENGTH 1 .
-    
-    TYPES:
-      list_type TYPE c LENGTH 2 .
-    
+      callout_type   TYPE string,
+      list_type      TYPE string,
+      progress_color TYPE string.
+
     TYPES:
       BEGIN OF param_value,
         param TYPE string,
         value TYPE string,
       END OF param_value .
-      
+
     TYPES:
       param_value_tab TYPE TABLE OF param_value WITH EMPTY KEY .
 
     CONSTANTS:
       BEGIN OF callout_types,
-        note     TYPE callout_type VALUE 'N',
-        info     TYPE callout_type VALUE 'I',
-        success  TYPE callout_type VALUE 'S',
-        warning  TYPE callout_type VALUE 'W',
-        error    TYPE callout_type VALUE 'E',
-        critical TYPE callout_type VALUE 'C',
+        note     TYPE string VALUE 'note',
+        info     TYPE string VALUE 'info',
+        success  TYPE string VALUE 'success',
+        warning  TYPE string VALUE 'warning',
+        error    TYPE string VALUE 'error',
+        critical TYPE string VALUE 'critical',
       END OF callout_types .
       
     CONSTANTS:
       BEGIN OF ol_types,
-        decimal              TYPE list_type VALUE 'DE',
-        decimal_leading_zero TYPE list_type VALUE 'DZ',
-        lower_alpha          TYPE list_type VALUE 'LA',
-        lower_roman          TYPE list_type VALUE 'LR',
-        upper_alpha          TYPE list_type VALUE 'UA',
-        upper_roman          TYPE list_type VALUE 'UR',
+        decimal              TYPE list_type VALUE 'decimal',
+        decimal_leading_zero TYPE list_type VALUE 'decimal-leading-zero',
+        lower_alpha          TYPE list_type VALUE 'lower-alpha',
+        lower_roman          TYPE list_type VALUE 'lower-roman',
+        upper_alpha          TYPE list_type VALUE 'upper-alpha',
+        upper_roman          TYPE list_type VALUE 'upper-roman',
       END OF ol_types .
       
     CONSTANTS:
       BEGIN OF ul_types,
-        circle TYPE list_type VALUE 'CI',
-        disc   TYPE list_type VALUE 'DI',
-        square TYPE list_type VALUE 'SQ',
+        circle TYPE list_type VALUE 'circle',
+        disc   TYPE list_type VALUE 'disc',
+        square TYPE list_type VALUE 'square',
       END OF ul_types .
-
+      
+    CONSTANTS:
+      BEGIN OF progress_colors,
+        red    TYPE string VALUE 'red',
+        blue   TYPE string VALUE 'blue',
+        green  TYPE string VALUE 'green',
+        orange TYPE string VALUE 'orange',
+      END OF progress_colors .
+      
     METHODS clear_content .
-    
+      
     METHODS append_header
       IMPORTING
         !header TYPE string
         !size   TYPE numc1 DEFAULT 1 .
-    
+      
     METHODS append_paragraph
       IMPORTING
         !paragraph TYPE string OPTIONAL .
-    
+      
     METHODS append_ordered_list
       IMPORTING
         !type  TYPE zcl_html_popup=>list_type DEFAULT zcl_html_popup=>ol_types-decimal
         !items TYPE string_table .
-    
+      
     METHODS append_unordered_list
       IMPORTING
         !type  TYPE zcl_html_popup=>list_type DEFAULT zcl_html_popup=>ul_types-disc
         !items TYPE string_table .
-    
+      
     METHODS append_markdown_table
       IMPORTING
         !caption TYPE string OPTIONAL
         !headers TYPE string_table OPTIONAL
         !rows    TYPE string_table OPTIONAL .
-    
+      
     METHODS append_monospaced_text_block
       IMPORTING
         !caption TYPE string OPTIONAL
         !rows    TYPE string_table .
+      
+    METHODS append_progress_bar
+      IMPORTING
+        !value     TYPE i
+        !max_value TYPE i
+        !color     TYPE zcl_html_popup=>progress_color DEFAULT zcl_html_popup=>progress_colors-green.
+      
     METHODS append_button
       IMPORTING
         !label  TYPE string
         !action TYPE string
         !params TYPE param_value_tab .
-    
+      
     METHODS append_callout_paragraph
       IMPORTING
         !type      TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
         !title     TYPE string OPTIONAL
         !paragraph TYPE string .
-    
+      
     METHODS begin_callout
       IMPORTING
         !type  TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
         !title TYPE string OPTIONAL .
-    
+      
     METHODS end_callout .
-    
+      
     METHODS display
       IMPORTING
         !title TYPE cl_abap_browser=>title OPTIONAL
         !size  TYPE string DEFAULT cl_abap_browser=>medium .
-    
+      
   PROTECTED SECTION.
 
   PRIVATE SECTION.
@@ -226,18 +240,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
   METHOD append_ordered_list.
 
-    CHECK: 'DE,DZ,LA,LR,UA,UR' CS type,
-           items IS NOT INITIAL.
+    CHECK items IS NOT INITIAL.
 
-    DATA(list_type) = SWITCH string( type WHEN ol_types-decimal              THEN 'decimal'
-                                          WHEN ol_types-decimal_leading_zero THEN 'decimal-leading-zero'
-                                          WHEN ol_types-lower_alpha          THEN 'lower-alpha'
-                                          WHEN ol_types-lower_roman          THEN 'lower-roman'
-                                          WHEN ol_types-upper_alpha          THEN 'upper-alpha'
-                                          WHEN ol_types-upper_roman          THEN 'upper-roman'
-                                          ELSE                                    'decimal' ).
-
-    popup_content &&= |<ol class="{ list_type }">|.
+    popup_content &&= |<ol class="{ type }">|.
 
     LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
       popup_content &&= |<li>{ <item> }</li>|.
@@ -255,17 +260,21 @@ CLASS zcl_html_popup IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD append_progress_bar.
+
+    CHECK: value    >= 0,
+           max_value > 0.
+
+    popup_content &&= |<progress value="{ value }" max="{ max_value }" class="{ color }"></progress><br>|.
+
+  ENDMETHOD.
+
+
   METHOD append_unordered_list.
 
-    CHECK: 'CI,DI,SQ' CS type,
-           items IS NOT INITIAL.
+    CHECK items IS NOT INITIAL.
 
-    DATA(list_type) = SWITCH string( type WHEN ul_types-circle THEN 'circle'
-                                          WHEN ul_types-disc   THEN 'disc'
-                                          WHEN ul_types-square THEN 'square'
-                                          ELSE                      'disc' ).
-
-    popup_content &&= |<ul class="{ list_type }">|.
+    popup_content &&= |<ul class="{ type }">|.
 
     LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
       popup_content &&= |<li>{ <item> }</li>|.
@@ -278,15 +287,7 @@ CLASS zcl_html_popup IMPLEMENTATION.
 
   METHOD begin_callout.
 
-    DATA(callout_type) = SWITCH string( type WHEN callout_types-note     THEN 'note'
-                                             WHEN callout_types-info     THEN 'info'
-                                             WHEN callout_types-success  THEN 'success'
-                                             WHEN callout_types-warning  THEN 'warning'
-                                             WHEN callout_types-error    THEN 'error'
-                                             WHEN callout_types-critical THEN 'critical'
-                                             ELSE                             'none' ).
-
-    popup_content &&= |<div class="callout { callout_type }">|.
+    popup_content &&= |<div class="callout { type }">|.
     popup_content &&= |<div class="callout-icon"></div><div>|.
 
     IF title IS NOT INITIAL.
@@ -334,17 +335,17 @@ CLASS zcl_html_popup IMPLEMENTATION.
   METHOD get_style.
 
     CONCATENATE
-      `/* --------------------------------- */`
-      `/* body                              */`
-      `/* --------------------------------- */`
+      `/* ------------------------------------------------------------------ */`
+      `/* body                                                               */`
+      `/* ------------------------------------------------------------------ */`
       `body {`
       `  font-family: Arial, sans-serif;`
       `  font-size: 13px;`
       `  background-color: #fafafa;`
       `}`
-      `/* --------------------------------- */`
-      `/* header                            */`
-      `/* --------------------------------- */`
+      `/* ------------------------------------------------------------------ */`
+      `/* header                                                             */`
+      `/* ------------------------------------------------------------------ */`
       `h1 {`
       `  font-size: 20px;`
       `  margin: 10px 0px 10px 0px;`
@@ -369,9 +370,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `  font-size: 13px;`
       `  margin: 10px 0px 10px 0px;`
       `}`
-      `/* --------------------------------- */`
-      `/* pre                               */`
-      `/* --------------------------------- */`
+      `/* ------------------------------------------------------------------ */`
+      `/* pre                                                                */`
+      `/* ------------------------------------------------------------------ */`
       `pre {`
       `  font-family: "Lucida Console", "Courier New", monospace;`
       `  font-size: 12px;`
@@ -380,9 +381,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `  border: 1px solid #ccc;`
       `  background-color: #f9f9f9;`
       `}`
-      `/* --------------------------------- */`
-      `/* list                              */`
-      `/* --------------------------------- */`
+      `/* ------------------------------------------------------------------ */`
+      `/* list                                                               */`
+      `/* ------------------------------------------------------------------ */`
       `ul.circle {list-style-type: circle;}`
       `ul.disc {list-style-type: disc;}`
       `ul.square {list-style-type: square;}`
@@ -393,9 +394,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `ol.upper-alpha {list-style-type: upper-alpha;}`
       `ol.upper-roman {list-style-type: upper-roman;}`
       ``
-      `/* --------------------------------- */`
-      `/* table                             */`
-      `/* --------------------------------- */`
+      `/* ------------------------------------------------------------------ */`
+      `/* table                                                              */`
+      `/* ------------------------------------------------------------------ */`
       `table {`
       `  font-size: 12px;`
       `  width: 95%;`
@@ -419,9 +420,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `  text-align: left;`
       `  margin: 15px 0px 7px 0px;`
       `}`
-      `/* --------------------------------- */`
-      `/* popup div (headers, lists)        */`
-      `/* --------------------------------- */`
+      `/* ------------------------------------------------------------------ */`
+      `/* popup div (headers, lists)                                         */`
+      `/* ------------------------------------------------------------------ */`
       `.popup {`
       `  width: 95%;`
       `  max-width: 99%;`
@@ -431,9 +432,9 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.15);`
       `  margin: auto;`
       `}`
-      `/* --------------------------------- */`
-      `/* callouts                          */`
-      `/* --------------------------------- */`
+      `/* ------------------------------------------------------------------ */`
+      `/* callouts                                                           */`
+      `/* ------------------------------------------------------------------ */`
       `.callout {`
       `  font-family: sans-serif;`
       `  font-size: 13px;`
@@ -456,6 +457,36 @@ CLASS zcl_html_popup IMPLEMENTATION.
       `.error    { background: #fce4ec; border-color: #e91e63; color: #880e4f; }`
       `.critical { background: #fce4ec; border-color: #e91e63; color: #880e4f; }`
       `.quote    { background: #f5f5f5; border-color: #9e9e9e; color: #424242; }`
+      `/* ------------------------------------------------------------------ */`
+      `/* progress bar                                                       */`
+      `/* ------------------------------------------------------------------ */`
+      `/* unfilled part */`
+      `progress {`
+      `    background: #e0e0e0; /* Gray 300 */`
+      `    height: 10px;`
+      `    border-radius: 10px;`
+      `}`
+      `/* unfilled part (Chrome/Safari) */`
+      `progress::-webkit-progress-bar {`
+      `    background: #e0e0e0; /* Gray 300 */`
+      `    height: 10px;`
+      `    border-radius: 10px;`
+      `}`
+      `/* filled part (Chrome/Safari) */`
+      `progress::-webkit-progress-value {`
+      `    background: currentColor;`
+      `    border-radius: 10px;`
+      `}`
+      `/* filled part (Firefox) */`
+      `progress::-moz-progress-bar {`
+      `    background: currentColor`
+      `    border-radius: 10px;`
+      `}`
+      `/* filled part */`
+      `progress.red { color: #f44336; } /* Red 500 */`
+      `progress.blue { color: #2196f3; } /* Blue 500 */`
+      `progress.green { color: #4caf50; } /* Green 500 */`
+      `progress.orange { color: #ff9800; } /* Orange 500 */`
       INTO style.
 
   ENDMETHOD.
