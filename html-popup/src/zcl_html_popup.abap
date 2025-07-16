@@ -1,18 +1,25 @@
 CLASS zcl_html_popup DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC.
+  CREATE PUBLIC .
 
   PUBLIC SECTION.
+    CLASS cl_abap_browser DEFINITION LOAD .
 
-    TYPES callout_type TYPE c LENGTH 1.
-
-    TYPES: BEGIN OF param_value,
-             param TYPE string,
-             value TYPE string,
-           END OF param_value.
-
-    TYPES: param_value_tab TYPE TABLE OF param_value WITH EMPTY KEY.
+    TYPES:
+      callout_type TYPE c LENGTH 1 .
+    
+    TYPES:
+      list_type TYPE c LENGTH 2 .
+    
+    TYPES:
+      BEGIN OF param_value,
+        param TYPE string,
+        value TYPE string,
+      END OF param_value .
+      
+    TYPES:
+      param_value_tab TYPE TABLE OF param_value WITH EMPTY KEY .
 
     CONSTANTS:
       BEGIN OF callout_types,
@@ -22,55 +29,82 @@ CLASS zcl_html_popup DEFINITION
         warning  TYPE callout_type VALUE 'W',
         error    TYPE callout_type VALUE 'E',
         critical TYPE callout_type VALUE 'C',
-      END OF callout_types.
+      END OF callout_types .
+      
+    CONSTANTS:
+      BEGIN OF ol_types,
+        decimal              TYPE list_type VALUE 'DE',
+        decimal_leading_zero TYPE list_type VALUE 'DZ',
+        lower_alpha          TYPE list_type VALUE 'LA',
+        lower_roman          TYPE list_type VALUE 'LR',
+        upper_alpha          TYPE list_type VALUE 'UA',
+        upper_roman          TYPE list_type VALUE 'UR',
+      END OF ol_types .
+      
+    CONSTANTS:
+      BEGIN OF ul_types,
+        circle TYPE list_type VALUE 'CI',
+        disc   TYPE list_type VALUE 'DI',
+        square TYPE list_type VALUE 'SQ',
+      END OF ul_types .
 
-    METHODS clear_content.
-
-    METHODS append_button
-      IMPORTING !label  TYPE string
-                !action TYPE string
-                !params TYPE param_value_tab.
-
+    METHODS clear_content .
+    
     METHODS append_header
-      IMPORTING !header TYPE string
-                !size   TYPE numc1 DEFAULT 1 .
-
+      IMPORTING
+        !header TYPE string
+        !size   TYPE numc1 DEFAULT 1 .
+    
     METHODS append_paragraph
-      IMPORTING !paragraph TYPE string OPTIONAL .
-
+      IMPORTING
+        !paragraph TYPE string OPTIONAL .
+    
     METHODS append_ordered_list
-      IMPORTING !items TYPE string_table .
-
+      IMPORTING
+        !type  TYPE zcl_html_popup=>list_type DEFAULT zcl_html_popup=>ol_types-decimal
+        !items TYPE string_table .
+    
     METHODS append_unordered_list
-      IMPORTING !items TYPE string_table .
-
+      IMPORTING
+        !type  TYPE zcl_html_popup=>list_type DEFAULT zcl_html_popup=>ul_types-disc
+        !items TYPE string_table .
+    
     METHODS append_markdown_table
-      IMPORTING !caption TYPE string OPTIONAL
-                !headers TYPE string_table OPTIONAL
-                !rows    TYPE string_table OPTIONAL .
-
+      IMPORTING
+        !caption TYPE string OPTIONAL
+        !headers TYPE string_table OPTIONAL
+        !rows    TYPE string_table OPTIONAL .
+    
     METHODS append_monospaced_text_block
-      IMPORTING !caption TYPE string OPTIONAL
-                !rows    TYPE string_table .
-
+      IMPORTING
+        !caption TYPE string OPTIONAL
+        !rows    TYPE string_table .
+    METHODS append_button
+      IMPORTING
+        !label  TYPE string
+        !action TYPE string
+        !params TYPE param_value_tab .
+    
     METHODS append_callout_paragraph
-      IMPORTING !type      TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
-                !title     TYPE string OPTIONAL
-                !paragraph TYPE string .
-
+      IMPORTING
+        !type      TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
+        !title     TYPE string OPTIONAL
+        !paragraph TYPE string .
+    
     METHODS begin_callout
-      IMPORTING !type  TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
-                !title TYPE string OPTIONAL .
-
+      IMPORTING
+        !type  TYPE zcl_html_popup=>callout_type DEFAULT zcl_html_popup=>callout_types-note
+        !title TYPE string OPTIONAL .
+    
     METHODS end_callout .
-
-    CLASS cl_abap_browser DEFINITION LOAD .
-
+    
     METHODS display
-      IMPORTING !title TYPE cl_abap_browser=>title OPTIONAL
-                !size  TYPE string DEFAULT cl_abap_browser=>medium .
-
+      IMPORTING
+        !title TYPE cl_abap_browser=>title OPTIONAL
+        !size  TYPE string DEFAULT cl_abap_browser=>medium .
+    
   PROTECTED SECTION.
+
   PRIVATE SECTION.
 
     DATA popup_content TYPE string .
@@ -85,7 +119,9 @@ CLASS zcl_html_popup DEFINITION
 ENDCLASS.
 
 
-CLASS ZCL_HTML_POPUP IMPLEMENTATION.
+
+CLASS zcl_html_popup IMPLEMENTATION.
+
 
   METHOD append_button.
 
@@ -100,6 +136,7 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD append_callout_paragraph.
 
     CHECK paragraph IS NOT INITIAL.
@@ -110,6 +147,7 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD append_header.
 
     CHECK: header IS NOT INITIAL,
@@ -118,6 +156,7 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
     popup_content &&= |<h{ size }>{ header }</h{ size }>|.
 
   ENDMETHOD.
+
 
   METHOD append_markdown_table.
 
@@ -161,8 +200,9 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD append_monospaced_text_block.
-    "append_preformatted_text.
+    "preformatted text
 
     CHECK rows IS NOT INITIAL.
 
@@ -183,11 +223,21 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD append_ordered_list.
 
-    CHECK items IS NOT INITIAL.
+    CHECK: 'DE,DZ,LA,LR,UA,UR' CS type,
+           items IS NOT INITIAL.
 
-    popup_content &&= |<ol>|.
+    DATA(list_type) = SWITCH string( type WHEN ol_types-decimal              THEN 'decimal'
+                                          WHEN ol_types-decimal_leading_zero THEN 'decimal-leading-zero'
+                                          WHEN ol_types-lower_alpha          THEN 'lower-alpha'
+                                          WHEN ol_types-lower_roman          THEN 'lower-roman'
+                                          WHEN ol_types-upper_alpha          THEN 'upper-alpha'
+                                          WHEN ol_types-upper_roman          THEN 'upper-roman'
+                                          ELSE                                    'decimal' ).
+
+    popup_content &&= |<ol class="{ list_type }">|.
 
     LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
       popup_content &&= |<li>{ <item> }</li>|.
@@ -197,17 +247,25 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD append_paragraph.
 
     popup_content &&= |<p>{ paragraph }</p>|.
 
   ENDMETHOD.
 
+
   METHOD append_unordered_list.
 
-    CHECK items IS NOT INITIAL.
+    CHECK: 'CI,DI,SQ' CS type,
+           items IS NOT INITIAL.
 
-    popup_content &&= |<ul>|.
+    DATA(list_type) = SWITCH string( type WHEN ul_types-circle THEN 'circle'
+                                          WHEN ul_types-disc   THEN 'disc'
+                                          WHEN ul_types-square THEN 'square'
+                                          ELSE                      'disc' ).
+
+    popup_content &&= |<ul class="{ list_type }">|.
 
     LOOP AT items ASSIGNING FIELD-SYMBOL(<item>).
       popup_content &&= |<li>{ <item> }</li>|.
@@ -217,6 +275,7 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD begin_callout.
 
     DATA(callout_type) = SWITCH string( type WHEN callout_types-note     THEN 'note'
@@ -225,7 +284,7 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
                                              WHEN callout_types-warning  THEN 'warning'
                                              WHEN callout_types-error    THEN 'error'
                                              WHEN callout_types-critical THEN 'critical'
-                                             ELSE 'none' ).
+                                             ELSE                             'none' ).
 
     popup_content &&= |<div class="callout { callout_type }">|.
     popup_content &&= |<div class="callout-icon"></div><div>|.
@@ -236,11 +295,13 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD clear_content.
 
     CLEAR popup_content.
 
   ENDMETHOD.
+
 
   METHOD display.
 
@@ -262,11 +323,13 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD end_callout.
 
     popup_content &&= |</div></div>|.
 
   ENDMETHOD.
+
 
   METHOD get_style.
 
@@ -397,6 +460,7 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD on_button_click.
 
     cl_demo_output=>write( action ).
@@ -404,5 +468,5 @@ CLASS ZCL_HTML_POPUP IMPLEMENTATION.
     cl_demo_output=>display( ).
 
   ENDMETHOD.
-
+  
 ENDCLASS.
