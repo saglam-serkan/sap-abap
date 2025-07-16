@@ -2,11 +2,11 @@
 
 Button
 
-![Header and Paragraph](../images/button.png)
+![Button](../images/button.png)
 
 Callouts
 
-![Header and Paragraph](../images/callouts.png)
+![Callouts](../images/callouts.png)
 
 Header and Paragraph
 
@@ -14,15 +14,15 @@ Header and Paragraph
 
 List
 
-![Header and Paragraph](../images/list.png)
+![List](../images/list.png)
 
-Monospaced_text
+Monospaced Text
 
-![Header and Paragraph](../images/monospaced_text.png)
+![Monospaced text](../images/monospaced_text.png)
 
-Progress bar
+Progress Bar
 
-![Header and Paragraph](../images/progress_bar.png)
+![Progress Bar](../images/progress_bar.png)
 
 Table
 
