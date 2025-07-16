@@ -8,6 +8,10 @@ Callouts
 
 ![Header and Paragraph](../images/callouts.png)
 
+Header and Paragraph
+
+![Header and Paragraph](../images/header_paragraph.png)
+
 List
 
 ![Header and Paragraph](../images/list.png)
@@ -15,10 +19,6 @@ List
 Monospaced_text
 
 ![Header and Paragraph](../images/monospaced_text.png)
-
-Header and Paragraph
-
-![Header and Paragraph](../images/header_paragraph.png)
 
 Progress bar
 
