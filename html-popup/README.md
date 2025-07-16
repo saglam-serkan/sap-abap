@@ -17,22 +17,22 @@ This class can be used to show messages, contextual help (such as F1 help on sel
 
 ## Methods Overview
 
-| Method                         | Description                                    | Relevant HTML Element | Notes                                          |
-|:-------------------------------|:-----------------------------------------------|:----------------------|:-----------------------------------------------|
-| `clear_content`                | Clears previously added elements               |                       | Call this method before displaying a new popup |
-| `append_header`                | Appends a header                               | `<h1>` to `<h6>`      ||
-| `append_paragraph`             | Appends a paragraph                            | `<p>`                 ||
-| `append_ordered_list`          | Appends a ordered list                         | `<ol>`                ||
-| `append_unordered_list`        | Appends a unordered list                       | `<ul>`                ||
-| `append_markdown_table`        | Appends a markdown formatted table             | `<table>`             ||
-| `append_monospaced_text_block` | Appends a block of monospaced (code-like) text | `<pre>`               ||
-| `append_progress_bar`          | Appends a progress bar                         | `<progress>`          ||
-| `append_button`                | Appends a clickable button                     | `<input>`             ||
-| `append_callout_paragraph`     | Appends a paragraph in a callout box           | `<div>`               ||
-| `begin_callout`                | Starts a callout section                       | `<div>`               | Other methods add content inside; remember to call `end_callout` |
-| `end_callout`                  | Ends a callout section                         |                       | Closes the `<div>`; must be called after `begin_callout` |
-| `display`                      | Renders and shows the content as a popup       |                       ||
-| `on_button_click`              | Handles button click events                    |                       | /!\ Not yet finished |
+| Method                         | Description                                  | Relevant HTML Element   | Notes                                           |
+|:-------------------------------|:---------------------------------------------|:------------------------|:------------------------------------------------|
+| `CLEAR_CONTENT`                | Clears all current content.                  |                         | Call this method before displaying a new popup  |
+| `APPEND_HEADER`                | Appends a header element.                    | `<h1>` ... `<h6>`       |                                                 |
+| `APPEND_PARAGRAPH`             | Appends a paragraph element.                 | `<p>`                   |                                                 |
+| `APPEND_ORDERED_LIST`          | Appends an ordered list with list items.     | `<ol>`                  |                                                 |
+| `APPEND_UNORDERED_LIST`        | Appends an unordered list with list items.   | `<ul>`                  |                                                 |
+| `APPEND_TABLE_FROM_STRING_TAB` | Appends a table from delimited string table. | `<table>`               |                                                 |
+| `APPEND_MONOSPACED_BLOCK`      | Appends a monospaced text block.             | `<pre>`                 |                                                 |
+| `APPEND_PROGRESS_BAR`          | Appends a progress bar element.              | `<progress>`            |                                                 |
+| `APPEND_BUTTON`                | Appends a clickable button element.          | `<input type="submit">` |                                                 |
+| `APPEND_CALLOUT_PARAGRAPH`     | Appends a styled callout paragraph.          | `<div>`                 |                                                 |
+| `BEGIN_CALLOUT`                | Starts a callout section.                    | `<div>`                 | Other methods append content inside; remember to call `END_CALLOUT` |
+| `END_CALLOUT`                  | Ends the callout section.                    |                         | Closes the `<div>`; must be called after `BEGIN_CALLOUT`            |
+| `DISPLAY`                      | Displays the popup.                          |                         |                                                                     |
+
 
 ## Example Usage
 
