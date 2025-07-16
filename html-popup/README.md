@@ -14,6 +14,7 @@ This class can be used to show messages, contextual help (such as F1 help on sel
 - Markdown-like tables
 - Preformatted (monospaced) text blocks
 - Callout sections (info, warning, success, error, etc.)
+- Progress bar
 - Buttons with actions and parameter passing
 
 ## Methods Overview
@@ -27,6 +28,7 @@ This class can be used to show messages, contextual help (such as F1 help on sel
 | `append_unordered_list`        | Appends a unordered list                       | `<ul>`                ||
 | `append_markdown_table`        | Appends a markdown formatted table             | `<table>`             ||
 | `append_monospaced_text_block` | Appends a block of monospaced (code-like) text | `<pre>`               ||
+| `append_progress_bar`          | Appends a progress bar                         | `<progress>`          ||
 | `append_button`                | Appends a clickable button                     | `<input>`             ||
 | `append_callout_paragraph`     | Appends a paragraph in a callout box           | `<div>`               ||
 | `begin_callout`                | Starts a callout section                       | `<div>`               | Other methods add content inside; remember to call `end_callout` |
