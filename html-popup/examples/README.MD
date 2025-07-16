@@ -26,14 +26,6 @@
 
 ![Header and Paragraph](../images/table.png)
 
-<table id="verticalalign">
-    <thead><tr><th>Example</th><th>Output</th></tr></thead>
-    <tbody>
-        <tr>
-            <td align="left" valign="top">Button</td><td align="left" valign="top">![Button](../images/button.png)</td>
-        </tr>
-    </tbody>
-</table>
 
 | Example              | Output                                 |
 |----------------------|----------------------------------------|
