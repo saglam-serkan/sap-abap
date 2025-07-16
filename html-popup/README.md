@@ -56,4 +56,4 @@ html_popup->display(
 ```
 
 ## Examples
-[See other examples](examples/)
+[See all examples](examples/)
