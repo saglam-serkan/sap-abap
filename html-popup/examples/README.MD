@@ -1,22 +1,29 @@
 
 
-button.abap
+Button
+
 ![Header and Paragraph](../images/button.png)
 
-callouts.abap
+Callouts
+
 ![Header and Paragraph](../images/callouts.png)
 
-list.abap
+List
+
 ![Header and Paragraph](../images/list.png)
 
-monospaced_text.abap
+Monospaced_text
+
 ![Header and Paragraph](../images/monospaced_text.png)
 
-paragraph.abap
+Header and Paragraph
+
 ![Header and Paragraph](../images/header_paragraph.png)
 
-progress_bar.abap
+Progress bar
+
 ![Header and Paragraph](../images/progress_bar.png)
 
-table.abap
+Table
+
 ![Header and Paragraph](../images/table.png)
