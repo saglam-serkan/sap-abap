@@ -4,7 +4,8 @@
 
 | Name                     | Description                                    | 
 |:-------------------------|:-----------------------------------------------|
-| [HTML Popup](html-popup) | `ZCL_HTML_POPUP` is a helper class that simplifies the creation and display of HTML popup windows in SAP GUI. |
+| [HTML Popup](html-popup) | `ZCL_HTML_POPUP` is a helper class that simplifies the creation and display of HTML popup windows in SAP GUI.|
+| [Smart Style](smart-style) |`Z_SMART_STYLE` includes a set of paragraph formats and character formats that can be used in Smart Forms.|
 
 [^1]: Disclaimer: This repository contains ABAP code samples for educational and informational purposes.
 All content is published under the [MIT License](LICENSE) and is provided "as is", without warranty of any kind.
