@@ -1,6 +1,6 @@
 # Smart Style
 
-`Z_SMART_STYLE` includes a set of paragraph formats and character formats that can be used in Smart Forms.
+Provides paragraph and character formats for use in Smart Forms.
 
 ## Paragraph Formats
 - Alignments for Text:
