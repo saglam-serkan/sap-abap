@@ -7,6 +7,9 @@
 
 [Smart Style](smart-style)\
 `Z_SMART_STYLE` includes a set of paragraph formats and character formats that can be used in Smart Forms.
+
+[Spreadsheet Reader](spreadsheet_reader)\
+`ZCL_SPREADSHEET_OPENXML_READER` is a custom class designed to read data from Excel (.xlsx) files using the OpenXML (SpreadsheetML) standard.
   
 [^1]: Disclaimer: This repository contains ABAP code samples for educational and informational purposes.
 All content is published under the [MIT License](LICENSE) and is provided "as is", without warranty of any kind.
