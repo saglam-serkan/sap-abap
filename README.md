@@ -2,12 +2,12 @@
 
 <sup>Disclaimer[^1]</sup>
 
-| Name                                     | Type  | Description                                                                                                      |
-| :--------------------------------------- | :---- | :--------------------------------------------------------------------------------------------------------------- |
-| [File Reader](file-reader)               | Class | `ZCL_FILE_READER` reads text files from the Application Server.                                                  |
-| [HTML Popup](html-popup)                 | Class | `ZCL_HTML_POPUP` displays HTML popup windows in SAP GUI.                                                         |
-| [Smart Style](smart-style)               | Class | `Z_SMART_STYLE` provides paragraph and character formats for use in Smart Forms.                                 |
-| [Spreadsheet Reader](spreadsheet-reader) | Class | `ZCL_SPREADSHEET_OPENXML_READER` reads data from Excel (.xlsx) files using the OpenXML (SpreadsheetML) standard. |
+| Name                                     | Description                                                                     |
+| :--------------------------------------- | :------------------------------------------------------------------------------ |
+| [File Reader](file-reader)               | Reads text files from the Application Server.                                   |
+| [HTML Popup](html-popup)                 | Displays HTML popup windows in SAP GUI.                                         |
+| [Smart Style](smart-style)               | Provides paragraph and character formats for use in Smart Forms.                |
+| [Spreadsheet Reader](spreadsheet-reader) | Reads data from Excel (.xlsx) files using the OpenXML (SpreadsheetML) standard. |
 
 
 [Classes](CLASSES.md)
