@@ -1,3 +1,3 @@
 # Spreadsheet Reader
 
-`ZCL_SPREADSHEET_OPENXML_READER` is a custom class designed to read data from Excel (.xlsx) files using the OpenXML (SpreadsheetML) standard.
+`ZCL_SPREADSHEET_OPENXML_READER` is a class that reads data from Excel (.xlsx) files using the OpenXML (SpreadsheetML) standard.
