@@ -2,11 +2,12 @@
 
 <sup>Disclaimer[^1]</sup>
 
-| Name                                     | Type  | Description |
-|:-----------------------------------------|:------|:------------|
-| [HTML Popup](html-popup)                 | Class | `ZCL_HTML_POPUP` is a class that simplifies the creation and display of HTML popup windows in SAP GUI. |
-| [Smart Style](smart-style)               | Class | `Z_SMART_STYLE` includes a set of paragraph formats and character formats that can be used in Smart Forms. |
-| [Spreadsheet Reader](spreadsheet_reader) | Class | `ZCL_SPREADSHEET_OPENXML_READER` is a class to read data from Excel (.xlsx) files using the OpenXML (SpreadsheetML) standard. |
+| Name                                     | Type  | Description                                                                                                      |
+| :--------------------------------------- | :---- | :--------------------------------------------------------------------------------------------------------------- |
+| [File Reader](file-reader)               | Class | `ZCL_FILE_READER` reads text files from the Application Server.                                                  |
+| [HTML Popup](html-popup)                 | Class | `ZCL_HTML_POPUP` displays HTML popup windows in SAP GUI.                                                         |
+| [Smart Style](smart-style)               | Class | `Z_SMART_STYLE` provides paragraph and character formats for use in Smart Forms.                                 |
+| [Spreadsheet Reader](spreadsheet-reader) | Class | `ZCL_SPREADSHEET_OPENXML_READER` reads data from Excel (.xlsx) files using the OpenXML (SpreadsheetML) standard. |
 
 [^1]: Disclaimer: This repository contains ABAP code samples for educational and informational purposes.
 All content is published under the [MIT License](LICENSE) and is provided "as is", without warranty of any kind.
