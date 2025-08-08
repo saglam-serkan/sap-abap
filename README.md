@@ -1,8 +1,6 @@
-# SAP ABAP
+## SAP ABAP
 
 <sup>Disclaimer[^1]</sup>
-
-## Repository Structure
 
 - [Tools](./tools) — Reusable solutions and components such as classes, frameworks, and utilities. 
 - [Snippets](./snippets) — Small reusable code blocks, methods, or functions. 
