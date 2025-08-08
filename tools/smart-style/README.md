@@ -1,8 +1,8 @@
-# Smart Style
+## Smart Style
 
 Provides paragraph and character formats for use in Smart Forms.
 
-## Paragraph Formats
+### Paragraph Formats
 - Alignments for Text:
   - Block
   - Center
@@ -20,7 +20,7 @@ Provides paragraph and character formats for use in Smart Forms.
   - `-` (dash)  
   - `*` (asterisk)  
 
-## Character Formats
+### Character Formats
 - Font Styles
   - Normal  
   - Bold  
