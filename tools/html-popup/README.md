@@ -1,10 +1,10 @@
-# HTML Popup
+## HTML Popup
 
 Displays HTML popup windows in SAP GUI.
 
 It supports headers, paragraphs, lists, buttons with parameters, callouts (such as warnings or info), tables, and monospaced text blocks. This class can be used to show messages, contextual help (such as F1 help on selection screen elements), or rich content in a clear and user-friendly format within the SAP GUI.
 
-## Features
+### Features
 
 - Styled HTML content with built-in CSS
 - Headers
@@ -15,7 +15,7 @@ It supports headers, paragraphs, lists, buttons with parameters, callouts (such 
 - Callout sections (info, warning, success, error, etc.)
 - Progress bar
 
-## Methods Overview
+### Methods Overview
 
 | Method                         | Description                                  | Relevant HTML Element   | Notes                                           |
 |:-------------------------------|:---------------------------------------------|:------------------------|:------------------------------------------------|
@@ -33,8 +33,7 @@ It supports headers, paragraphs, lists, buttons with parameters, callouts (such 
 | `END_CALLOUT`                  | Ends the callout section.                    |                         | Closes the `<div>`; must be called after `BEGIN_CALLOUT`            |
 | `DISPLAY`                      | Displays the popup.                          |                         |                                                                     |
 
-
-## Example Usage
+### Example Usage
 
 ```abap
 DATA(html_popup) = NEW zcl_html_popup( ).
@@ -53,5 +52,5 @@ html_popup->display(
   ).
 ```
 
-## Examples
+### Examples
 [See all examples](examples/)
