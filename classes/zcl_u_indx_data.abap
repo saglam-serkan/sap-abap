@@ -1,3 +1,59 @@
+"--------------------------------------------------------------------*
+" MIT License
+"
+" Copyright (c) 2025 Serkan Saglam
+"
+" Permission is hereby granted, free of charge, to any person obtaining a copy
+" of this software and associated documentation files (the "Software"), to deal
+" in the Software without restriction, including without limitation the rights
+" to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+" copies of the Software, and to permit persons to whom the Software is
+" furnished to do so, subject to the following conditions:
+"
+" The above copyright notice and this permission notice shall be included in all
+" copies or substantial portions of the Software.
+"
+" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+" AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+" LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+" OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+" SOFTWARE.
+"
+"--------------------------------------------------------------------*
+"
+" Class ZCL_U_INDX_DATA
+" Utility class for generic INDX-style data storage
+"
+" Purpose: 
+"   Utility class for storing, retrieving, updating, and managing data objects
+"   in the generic INDX-style cluster table ZBC_U_INDX. Objects are identified
+"   by OBJTYP and OBJKEY and include metadata (creation and modification).
+"   This class (and the underlying INDX table) can be used to store data such 
+"   as call stacks, traces, logs, settings, additional info for documents, 
+"   images, and other custom objects.
+"
+" Dependencies
+" - Interface ZIF_UTILITY
+" - Database table ZBC_U_INDX
+"
+" Methods
+"   GET_INSTANCE   | Returns the singleton instance of the class                
+"   INSERT         | Store a new data object in the cluster table               
+"   UPDATE         | Update an existing data object in the cluster table        
+"   READ           | Read a data object from the cluster table                  
+"   DELETE         | Delete a data object from the cluster table                
+"   GET_LIST       | Return a list of entries (UUID + metadata)                 
+"   GET_LENGTH     | Return the size of stored data in bytes                    
+"   _CREATE_UUID   | Generate a unique 32-character identifier for a new entry  
+"   _BUILD_INDX_ID | Concatenate UUID + OBJTYP + OBJKEY to generate the INDX ID 
+"   _EXPORT        | Write data to the cluster table                            
+"   _IMPORT        | Read data from the cluster table                           
+"   _READ_METADATA | Read only metadata of a stored data object  
+"
+"--------------------------------------------------------------------*
+
 CLASS zcl_u_indx_data DEFINITION
   PUBLIC
   FINAL
@@ -8,7 +64,7 @@ CLASS zcl_u_indx_data DEFINITION
     INTERFACES zif_utility .
 
     TYPES:
-      indx_id TYPE c LENGTH 94 .        "32+32+30
+      indx_id TYPE c LENGTH 94 . "uuid + objtyp + objkey
     
     TYPES:
       BEGIN OF indx_entry,
@@ -142,22 +198,6 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
     ENDIF.
 
     instance = zcl_u_indx_data=>instance.
-
-
-    " | Method Name    | Description                                                |
-    " |----------------|------------------------------------------------------------|
-    " | GET_INSTANCE   | Returns the singleton instance of the class                |
-    " | INSERT         | Store a new data object in the cluster table               |
-    " | UPDATE         | Update an existing data object in the cluster table        |
-    " | READ           | Read a data object from the cluster table                  |
-    " | DELETE         | Delete a data object from the cluster table                |
-    " | GET_LIST       | Return a list of entries (UUID + metadata)                 |
-    " | GET_LENGTH     | Return the size of stored data in bytes                    |
-    " | _CREATE_UUID   | Generate a unique 32-character identifier for a new entry  |
-    " | _BUILD_INDX_ID | Concatenate UUID + OBJTYP + OBJKEY to generate the INDX ID |
-    " | _EXPORT        | Write data to the cluster table                            |
-    " | _IMPORT        | Read data from the cluster table                           |
-    " | _READ_METADATA | Read only metadata of a stored data object                 |
 
   ENDMETHOD.
 
