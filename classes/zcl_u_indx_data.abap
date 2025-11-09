@@ -26,12 +26,12 @@
 " Class ZCL_U_INDX_DATA
 " Utility class for generic INDX-style data storage
 "
-" Purpose: 
+" Purpose:
 "   Utility class for storing, retrieving, updating, and managing data objects
 "   in the generic INDX-style cluster table ZBC_U_INDX. Objects are identified
 "   by OBJTYP and OBJKEY and include metadata (creation and modification).
-"   This class (and the underlying INDX table) can be used to store data such 
-"   as call stacks, traces, logs, settings, additional info for documents, 
+"   This class (and the underlying INDX table) can be used to store data such
+"   as call stacks, traces, logs, settings, additional info for documents,
 "   images, and other custom objects.
 "
 " Dependencies
@@ -39,18 +39,18 @@
 " - Database table ZBC_U_INDX
 "
 " Methods
-"   GET_INSTANCE   | Returns the singleton instance of the class                
-"   INSERT         | Store a new data object in the cluster table               
-"   UPDATE         | Update an existing data object in the cluster table        
-"   READ           | Read a data object from the cluster table                  
-"   DELETE         | Delete a data object from the cluster table                
-"   GET_LIST       | Return a list of entries (UUID + metadata)                 
-"   GET_LENGTH     | Return the size of stored data in bytes                    
-"   _CREATE_UUID   | Generate a unique 32-character identifier for a new entry  
-"   _BUILD_INDX_ID | Concatenate UUID + OBJTYP + OBJKEY to generate the INDX ID 
-"   _EXPORT        | Write data to the cluster table                            
-"   _IMPORT        | Read data from the cluster table                           
-"   _READ_METADATA | Read only metadata of a stored data object  
+"   GET_INSTANCE    | Returns the singleton instance of the class
+"   INSERT          | Store a new data object in the cluster table
+"   UPDATE          | Update an existing data object in the cluster table
+"   READ            | Read a data object from the cluster table
+"   DELETE          | Delete a data object from the cluster table
+"   GET_LIST        | Return a list of entries (UUID + metadata)
+"   GET_LENGTH      | Return the size of stored data in bytes
+"   _CREATE_UUID    | Generate a unique 32-character identifier for a new entry
+"   _BUILD_INDX_ID  | Concatenate UUID + OBJTYP + OBJKEY to generate the INDX ID
+"   _EXPORT_TO_DB   | Write data to the DB table ZBC_U_INDX
+"   _IMPORT_FROM_DB | Read data from the DB table ZBC_U_INDX
+"   _READ_METADATA  | Read only metadata of a stored data object
 "
 "--------------------------------------------------------------------*
 
@@ -65,7 +65,7 @@ CLASS zcl_u_indx_data DEFINITION
 
     TYPES:
       indx_id TYPE c LENGTH 94 . "uuid + objtyp + objkey
-    
+
     TYPES:
       BEGIN OF indx_entry,
         uuid   TYPE zbc_u_indx-uuid,
@@ -79,14 +79,14 @@ CLASS zcl_u_indx_data DEFINITION
         chtime TYPE zbc_u_indx-chtime,
         chuser TYPE zbc_u_indx-chuser,
       END OF indx_entry .
-      
+
     TYPES:
       indx_entries TYPE TABLE OF indx_entry WITH EMPTY KEY .
 
     CLASS-METHODS get_instance
       RETURNING
         VALUE(instance) TYPE REF TO zcl_u_indx_data .
-    
+
     METHODS insert
       IMPORTING
         !objtyp     TYPE zbc_u_indx-objtyp
@@ -94,14 +94,14 @@ CLASS zcl_u_indx_data DEFINITION
         !data       TYPE any
       RETURNING
         VALUE(uuid) TYPE zbc_u_indx-uuid .
-    
+
     METHODS update
       IMPORTING
         !uuid   TYPE zbc_u_indx-uuid
         !objtyp TYPE zbc_u_indx-objtyp
         !objkey TYPE zbc_u_indx-objkey
         !data   TYPE any .
-    
+
     METHODS read
       IMPORTING
         !uuid   TYPE zbc_u_indx-uuid
@@ -109,20 +109,20 @@ CLASS zcl_u_indx_data DEFINITION
         !objkey TYPE zbc_u_indx-objkey
       EXPORTING
         !data   TYPE any .
-    
+
     METHODS delete
       IMPORTING
         !uuid   TYPE zbc_u_indx-uuid
         !objtyp TYPE zbc_u_indx-objtyp
         !objkey TYPE zbc_u_indx-objkey .
-    
+
     METHODS get_list
       IMPORTING
         !objtyp             TYPE zbc_u_indx-objtyp
         !objkey             TYPE zbc_u_indx-objkey OPTIONAL
       RETURNING
         VALUE(indx_entries) TYPE indx_entries .
-    
+
     METHODS get_length
       IMPORTING
         !uuid         TYPE zbc_u_indx-uuid
@@ -130,7 +130,7 @@ CLASS zcl_u_indx_data DEFINITION
         !objkey       TYPE zbc_u_indx-objkey
       RETURNING
         VALUE(length) TYPE zbc_u_indx-clustr .
-    
+
   PRIVATE SECTION.
 
     CLASS-DATA instance TYPE REF TO zcl_u_indx_data .
@@ -147,13 +147,13 @@ CLASS zcl_u_indx_data DEFINITION
       RETURNING
         VALUE(indx_id) TYPE indx_id .
     
-    METHODS _export
+    METHODS _export_to_db
       IMPORTING
         !indx      TYPE zbc_u_indx
         !data      TYPE any
         !db_commit TYPE abap_bool OPTIONAL .
     
-    METHODS _import
+    METHODS _import_from_db
       IMPORTING
         !uuid   TYPE zbc_u_indx-uuid
         !objtyp TYPE zbc_u_indx-objtyp
@@ -168,7 +168,6 @@ CLASS zcl_u_indx_data DEFINITION
         !objkey     TYPE zbc_u_indx-objkey
       RETURNING
         VALUE(indx) TYPE zbc_u_indx .
-
 ENDCLASS.
 
 
@@ -231,10 +230,8 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
 
     TRY.
         SELECT
-            uuid objtyp objkey
-            srtf2
-            crdate crtime cruser
-            chdate chtime chuser
+            uuid objtyp objkey srtf2
+            crdate crtime cruser chdate chtime chuser
           FROM
             zbc_u_indx
           INTO
@@ -262,9 +259,9 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
     indx-crtime = sy-uzeit.
     indx-cruser = sy-uname.
 
-    _export( indx      = indx
-             data      = data
-             db_commit = abap_false ).
+    _export_to_db( indx      = indx
+                   data      = data
+                   db_commit = abap_false ).
 
     uuid = indx-uuid.
 
@@ -277,10 +274,10 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
            objtyp IS NOT INITIAL,
            objkey IS NOT INITIAL.
 
-    _import( EXPORTING uuid   = uuid
-                       objtyp = objtyp
-                       objkey = objkey
-             IMPORTING data   = data ).
+    _import_from_db( EXPORTING uuid   = uuid
+                               objtyp = objtyp
+                               objkey = objkey
+                     IMPORTING data   = data ).
 
   ENDMETHOD.
 
@@ -305,9 +302,9 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
     indx-chtime = sy-uzeit.
     indx-chuser = sy-uname.
 
-    _export( indx      = indx
-             data      = data
-             db_commit = abap_false ).
+    _export_to_db( indx      = indx
+                   data      = data
+                   db_commit = abap_false ).
 
   ENDMETHOD.
 
@@ -333,7 +330,7 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD _export.
+  METHOD _export_to_db.
 
     DATA(indx_id) = _build_indx_id( uuid   = indx-uuid
                                     objtyp = indx-objtyp
@@ -360,7 +357,7 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD _import.
+  METHOD _import_from_db.
 
     CHECK: uuid   IS NOT INITIAL,
            objtyp IS NOT INITIAL,
@@ -393,16 +390,8 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
            objkey IS NOT INITIAL.
 
     SELECT SINGLE
-        uuid
-        objtyp
-        objkey
-        srtf2
-        crdate
-        crtime
-        cruser
-        chdate
-        chtime
-        chuser
+        uuid objtyp objkey srtf2
+        crdate crtime cruser chdate chtime chuser
       FROM
         zbc_u_indx
       INTO
@@ -414,5 +403,7 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
         AND srtf2  = 0.
 
   ENDMETHOD.
+  
+ENDCLASS.
   
 ENDCLASS.
