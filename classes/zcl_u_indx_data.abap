@@ -168,6 +168,7 @@ CLASS zcl_u_indx_data DEFINITION
         !objkey     TYPE zbc_u_indx-objkey
       RETURNING
         VALUE(indx) TYPE zbc_u_indx .
+
 ENDCLASS.
 
 
@@ -403,7 +404,5 @@ CLASS zcl_u_indx_data IMPLEMENTATION.
         AND srtf2  = 0.
 
   ENDMETHOD.
-  
-ENDCLASS.
   
 ENDCLASS.
