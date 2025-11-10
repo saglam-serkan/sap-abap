@@ -1,8 +1,7 @@
 # Classes
 
-| Class Name                                                                                       | Description                                    | Folder                                         |
-|:-------------------------------------------------------------------------------------------------|:-----------------------------------------------|:-----------------------------------------------|
-| [`ZCL_FILE_READER`](./file-reader/src/zcl_file_reader.abap)                                      | Reads text files from the Application Server.  | [file-reader](./file-reader)                   |
-| [`ZCL_HTML_POPUP`](./html-popup/src/zcl_html_popup.abap)                                         | Displays HTML popup windows in SAP GUI.        | [html-popup](./html-popup)                     |
-| [`ZCL_SPREADSHEET_OPENXML_READER`](./spreadsheet-reader/src/zcl_spreadsheet_openxml_reader.abap) | Reads data from Excel (.xlsx) via OpenXML.     | [spreadsheet-reader](./spreadsheet-reader)     |
+| Class Name                                                | Description                                     | Folder                                         |
+|:----------------------------------------------------------|:------------------------------------------------|:-----------------------------------------------|
+| [`ZCL_U_INDX_DATA`](./classes/zcl_u_indx_data.abap)       | Utility class: Generic INDX-style data storage  | [file-reader](./file-reader)                   |
+
 
