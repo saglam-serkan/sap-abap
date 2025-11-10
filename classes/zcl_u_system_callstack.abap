@@ -27,9 +27,9 @@
 " Utility class: Callstack
 "
 " Purpose:
-"  Utility class for collecting the call stack. Provides methods to retrieve 
-"  and format the stack, with output as a string or table, and includes methods
-"  to obtain the immediate and root callers.
+"   Utility class for collecting the call stack. Provides methods to retrieve 
+"   and format the stack, with output as a string or table, and includes methods
+"   to obtain the immediate and root callers.
 "
 " Dependencies
 " - Interface ZIF_UTILITY
