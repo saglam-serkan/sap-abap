@@ -24,7 +24,7 @@
 "--------------------------------------------------------------------*
 "
 " Class ZCL_U_INDX_DATA
-" Utility class for generic INDX-style data storage
+" Utility class: Generic INDX-style data storage
 "
 " Purpose:
 "   Utility class for storing, retrieving, updating, and managing data objects
