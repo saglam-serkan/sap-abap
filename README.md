@@ -2,7 +2,7 @@
 
 <sup>Disclaimer[^1]</sup>
 
-- [Classes](./classes) — Utility classes 
+- [Classes](./classes/README.md) - Utility classes 
 
 [^1]: Disclaimer: This repository contains ABAP code samples for educational and informational purposes.
 All content is published under the [MIT License](LICENSE) and is provided "as is", without warranty of any kind.
