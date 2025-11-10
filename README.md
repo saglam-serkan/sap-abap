@@ -2,8 +2,7 @@
 
 <sup>Disclaimer[^1]</sup>
 
-- [Tools](./tools) — Reusable solutions and components such as classes, frameworks, and utilities. 
-- [Snippets](./snippets) — Small reusable code blocks, methods, or functions. 
+- [Classes](./classes) — Utility classes 
 
 [^1]: Disclaimer: This repository contains ABAP code samples for educational and informational purposes.
 All content is published under the [MIT License](LICENSE) and is provided "as is", without warranty of any kind.
