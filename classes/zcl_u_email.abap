@@ -36,6 +36,7 @@
 " Methods
 "   CREATE_INSTANCE        | Create a new singleton instance of the class
 "   GET_INSTANCE           | Return the existing singleton instance
+"   ADD_BODY               | Append text to the email body
 "   ADD_ATTACHMENT         | Add an attachment to the email
 "   ADD_RECIPIENT          | Add a recipient to the email
 "   HAS_ATTACHMENTS        | Check if the email contains attachments
@@ -48,7 +49,7 @@
 "   REMOVE_ATTACHMENTS     | Remove all attachments from the email
 "   REMOVE_RECIPIENTS      | Remove all recipients from the email
 "   SEND                   | Send the composed email
-"   SET_BODY               | Set or append text to the email body
+"   SET_BODY               | Set (replace) the email body
 "   SET_SENDER             | Define the email sender
 "   SET_SUBJECT            | Define the email subject line
 "   VALIDATE_EMAIL_ADDRESS | Validate the format of an email address
@@ -72,7 +73,7 @@ CLASS zcl_u_email DEFINITION
         name  TYPE string,
         uname TYPE uname,
       END OF sender .
-      
+
     TYPES:
       BEGIN OF recipient,
         email TYPE string,
@@ -81,20 +82,20 @@ CLASS zcl_u_email DEFINITION
         cc    TYPE abap_bool,
         bcc   TYPE abap_bool,
       END OF recipient .
-      
+
     TYPES:
       recipients TYPE TABLE OF recipient WITH EMPTY KEY .
-      
+
     TYPES:
       BEGIN OF attachment,
         type        TYPE soodk-objtp,
         subject     TYPE sood-objdes,
         content_hex TYPE solix_tab,
       END OF attachment .
-      
+
     TYPES:
       attachments TYPE TABLE OF attachment WITH EMPTY KEY .
-      
+
     TYPES:
       BEGIN OF email,
         "<participants>
@@ -118,11 +119,11 @@ CLASS zcl_u_email DEFINITION
     CLASS-METHODS create_instance
       RETURNING
         VALUE(instance) TYPE REF TO zcl_u_email .
-    
+
     CLASS-METHODS get_instance
       RETURNING
         VALUE(instance) TYPE REF TO zcl_u_email .
-    
+
     METHODS add_attachment
       IMPORTING
         !file_type    TYPE string
@@ -130,35 +131,39 @@ CLASS zcl_u_email DEFINITION
         !file_content TYPE any
       RAISING
         cx_bcs .
-    
+
+    METHODS add_body
+      IMPORTING
+        !text TYPE string .
+
     METHODS add_recipient
       IMPORTING
         !recipient TYPE recipient .
-    
+
     METHODS has_attachments
       RETURNING
         VALUE(result) TYPE abap_bool .
-    
+
     METHODS has_recipients
       RETURNING
         VALUE(result) TYPE abap_bool .
-    
+
     METHODS get_body
       RETURNING
         VALUE(body) TYPE string .
-    
+
     METHODS get_recipients
       RETURNING
         VALUE(recipients) TYPE recipients .
-    
+
     METHODS get_sender
       RETURNING
         VALUE(sender) TYPE sender .
-    
+
     METHODS get_subject
       RETURNING
         VALUE(subject) TYPE string .
-    
+
     METHODS reset
       IMPORTING
         !all         TYPE abap_bool OPTIONAL
@@ -167,15 +172,15 @@ CLASS zcl_u_email DEFINITION
         !subject     TYPE abap_bool OPTIONAL
         !body        TYPE abap_bool OPTIONAL
         !attachments TYPE abap_bool OPTIONAL .
-    
+
     METHODS remove_attachments
       RETURNING
         VALUE(count_removed) TYPE i .
-    
+
     METHODS remove_recipients
       RETURNING
         VALUE(count_removed) TYPE i .
-    
+
     METHODS send
       IMPORTING
         !send_immediately        TYPE abap_bool OPTIONAL
@@ -187,26 +192,25 @@ CLASS zcl_u_email DEFINITION
         cx_document_bcs
         cx_send_req_bcs
         zcx_u_exception .
-    
+
     METHODS set_body
       IMPORTING
-        !text   TYPE string
-        !append TYPE abap_bool OPTIONAL .
-    
+        !text TYPE string .
+
     METHODS set_sender
       IMPORTING
         !sender TYPE sender .
-    
+
     METHODS set_subject
       IMPORTING
         !subject TYPE string .
-    
+
     METHODS validate_email_address
       IMPORTING
         !email_address  TYPE string
       RETURNING
         VALUE(is_valid) TYPE abap_bool .
-    
+
   PROTECTED SECTION.
 
   PRIVATE SECTION.
@@ -222,7 +226,7 @@ CLASS zcl_u_email DEFINITION
       RAISING
         cx_address_bcs
         zcx_u_exception .
-    
+
     METHODS _get_recipient
       IMPORTING
         !recipient       TYPE recipient
@@ -231,12 +235,19 @@ CLASS zcl_u_email DEFINITION
       RAISING
         cx_address_bcs
         zcx_u_exception .
-    
+
 ENDCLASS.
 
 
 
 CLASS zcl_u_email IMPLEMENTATION.
+
+
+  METHOD add_body.
+
+    _email-body = _email-body && text.
+
+  ENDMETHOD.
 
 
   METHOD add_attachment.
@@ -435,11 +446,7 @@ CLASS zcl_u_email IMPLEMENTATION.
 
   METHOD set_body.
 
-    IF append = abap_true.
-      _email-body = _email-body && text.
-    ELSE.
-      _email-body = text.
-    ENDIF.
+    _email-body = text.
 
   ENDMETHOD.
 
@@ -517,5 +524,5 @@ CLASS zcl_u_email IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-  
+
 ENDCLASS.
