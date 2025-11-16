@@ -1,37 +1,15 @@
 "--------------------------------------------------------------------*
-" MIT License
-"
-" Copyright (c) 2025 Serkan Saglam
-"
-" Permission is hereby granted, free of charge, to any person obtaining a copy
-" of this software and associated documentation files (the "Software"), to deal
-" in the Software without restriction, including without limitation the rights
-" to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-" copies of the Software, and to permit persons to whom the Software is
-" furnished to do so, subject to the following conditions:
-"
-" The above copyright notice and this permission notice shall be included in all
-" copies or substantial portions of the Software.
-"
-" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-" AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-" LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-" OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-" SOFTWARE.
-"
-"--------------------------------------------------------------------*
 "
 " Class ZCL_EMAIL_UTIL
 " Utility class: Email
 "
 " Purpose:
 "   Utility class for constructing and sending emails.
-"   Provides high-level methods for building email using CL_BCS.
+"   Provides methods for building and sending email using CL_BCS.
 "
 " Dependencies
 " - Interface ZIF_UTILITY
+" - Exception Class ZCX_U_EXCEPTION
 "
 " Methods
 "   CREATE_INSTANCE        | Create a new singleton instance of the class
@@ -98,22 +76,14 @@ CLASS zcl_u_email DEFINITION
 
     TYPES:
       BEGIN OF email,
-        "<participants>
         sender      TYPE sender,
         recipients  TYPE recipients,
-        "<content>
         subject     TYPE string,
         body        TYPE string,
         attachments TYPE attachments,
-        ""<message properties>
-        "importance       TYPE so_obj_pri,
-        "sensitivity      TYPE so_obj_sns,
-        ""<delivery options>
-        "priority         TYPE so_snd_pri,
-        "expires_on       TYPE bcs_xpire,
-        "send_on_date     TYPE datum,
-        "send_at_time     TYPE uzeit,
-        "send_immediately TYPE abap_bool,
+        "importance  TYPE so_obj_pri,
+        "sensitivity TYPE so_obj_sns,
+        "priority    TYPE so_snd_pri,
       END OF email .
 
     CLASS-METHODS create_instance
