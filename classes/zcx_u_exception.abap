@@ -1,3 +1,6 @@
+" Dependencies
+" - Interface ZIF_UTILITY
+
 CLASS zcx_u_exception DEFINITION
   PUBLIC
   INHERITING FROM cx_static_check
@@ -14,3 +17,5 @@ CLASS zcx_u_exception DEFINITION
       IMPORTING
         !textid   LIKE if_t100_message=>t100key OPTIONAL
         !previous LIKE previous OPTIONAL .
+
+...
