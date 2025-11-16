@@ -18,4 +18,4 @@ CLASS zcx_u_exception DEFINITION
         !textid   LIKE if_t100_message=>t100key OPTIONAL
         !previous LIKE previous OPTIONAL .
 
-...
+ENDCLASS.
